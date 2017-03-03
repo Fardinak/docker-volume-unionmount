@@ -78,6 +78,9 @@ func (d *unionMountDriver) Create(r volume.Request) volume.Response {
 			if !filepath.IsAbs(path) {
 				return volume.Response{Err: fmt.Sprintf("layer path \"%s\" is not relative", path)}
 			}
+			if _, err := os.Stat(path); os.IsNotExist(err) {
+				return volume.Response{Err: fmt.Sprintf("layer path \"%s\" does not exist", path)}
+			}
 		}
 	} else {
 		return volume.Response{Err: "no layers defined"}
